@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  push:
+    branches: [main, develop, 'feat/**', 'fix/**', 'chore/**', 'test/**', 'docs/**']
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit and component tests
+        run: npm run test:ci
