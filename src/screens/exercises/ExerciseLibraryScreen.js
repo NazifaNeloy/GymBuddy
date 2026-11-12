@@ -1,20 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { ExerciseCard } from '../../components/exercises/ExerciseCard';
+import { ExerciseFilterBar } from '../../components/exercises/ExerciseFilterBar';
 import { EmptyState } from '../../components/states/EmptyState';
 import { ErrorState } from '../../components/states/ErrorState';
 import { LoadingState } from '../../components/states/LoadingState';
 import { OfflineBanner } from '../../components/states/OfflineBanner';
 import { AppText } from '../../components/ui/AppText';
 import { Banner } from '../../components/ui/Banner';
-import { Chip } from '../../components/ui/Chip';
-import { TextField } from '../../components/ui/TextField';
-import { MUSCLE_GROUPS } from '../../constants/exercises';
 import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 import { useResponsive } from '../../hooks/useResponsive';
 import { useExerciseStore } from '../../store/exerciseStore';
 import { useTheme } from '../../theme/ThemeProvider';
-import { availableMuscleGroups, filterExercises } from '../../utils/exerciseFilters';
+import { filterExercises } from '../../utils/exerciseFilters';
 
 export function ExerciseLibraryScreen({ navigation }) {
   const theme = useTheme();
@@ -35,13 +33,8 @@ export function ExerciseLibraryScreen({ navigation }) {
     load();
   }, [load]);
 
-  const groups = useMemo(() => availableMuscleGroups(items, MUSCLE_GROUPS), [items]);
   const results = useMemo(() => filterExercises(items, { query, muscles }), [items, query, muscles]);
 
-  const toggleMuscle = useCallback(
-    (key) => setMuscles((current) => (current.includes(key) ? current.filter((m) => m !== key) : [...current, key])),
-    []
-  );
   const clearFilters = useCallback(() => {
     setQuery('');
     setMuscles([]);
@@ -64,36 +57,13 @@ export function ExerciseLibraryScreen({ navigation }) {
       {!isOffline && refreshError ? (
         <Banner tone="warning" message={`Couldn't refresh. Showing saved exercises. ${refreshError}`} />
       ) : null}
-      <TextField
-        label="Search exercises"
-        value={query}
-        onChangeText={setQuery}
-        placeholder="e.g. bench, squat, biceps, cable"
-        autoCapitalize="none"
-        autoCorrect={false}
-        returnKeyType="search"
-        clearButtonMode="while-editing"
-        testID="exercise-search"
-        style={{ marginBottom: theme.spacing.md }}
+      <ExerciseFilterBar
+        exercises={items}
+        query={query}
+        onQueryChange={setQuery}
+        muscles={muscles}
+        onMusclesChange={setMuscles}
       />
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        accessibilityLabel="Filter by muscle group"
-        contentContainerStyle={{ paddingRight: gutter }}
-      >
-        <Chip label="All" selected={muscles.length === 0} onPress={() => setMuscles([])} testID="muscle-chip-all" />
-        {groups.map((g) => (
-          <Chip
-            key={g.key}
-            label={g.label}
-            selected={muscles.includes(g.key)}
-            onPress={() => toggleMuscle(g.key)}
-            testID={`muscle-chip-${g.key}`}
-          />
-        ))}
-      </ScrollView>
       <AppText variant="caption" color="textMuted" style={{ marginVertical: theme.spacing.sm }} testID="exercise-count">
         {results.length === 1 ? '1 exercise' : `${results.length} exercises`}
       </AppText>
