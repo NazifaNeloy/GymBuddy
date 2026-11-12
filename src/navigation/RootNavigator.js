@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LoadingState } from '../components/states/LoadingState';
 import { ResetPasswordScreen } from '../screens/auth/ResetPasswordScreen';
-import { HomeScreen } from '../screens/home/HomeScreen';
 import { useAuthStore } from '../store/authStore';
 import { AuthStack } from './AuthStack';
+import { MainTabs } from './MainTabs';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,7 +22,7 @@ export function RootNavigator() {
       {status === 'signedIn' && isPasswordRecovery ? (
         <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
       ) : status === 'signedIn' ? (
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Main" component={MainTabs} />
       ) : (
         <Stack.Screen name="Auth" component={AuthStack} />
       )}
