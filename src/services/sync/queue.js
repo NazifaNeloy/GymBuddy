@@ -59,7 +59,7 @@ export function enqueue({ table, op = 'upsert', payload }, now = Date.now()) {
       existing.lastError = null;
       existing.nextAttemptAt = 0;
       await save();
-      return existing;
+      return { ...existing };
     }
     const entry = {
       id: newId(),
@@ -74,7 +74,7 @@ export function enqueue({ table, op = 'upsert', payload }, now = Date.now()) {
     };
     entries.push(entry);
     await save();
-    return entry;
+    return { ...entry };
   });
 }
 
@@ -82,7 +82,7 @@ export function enqueue({ table, op = 'upsert', payload }, now = Date.now()) {
 export function getAll() {
   return serial(async () => {
     await ensureLoaded();
-    return entries.slice();
+    return entries.map((e) => ({ ...e }));
   });
 }
 
@@ -90,7 +90,8 @@ export function getAll() {
 export function getReady(now = Date.now()) {
   return serial(async () => {
     await ensureLoaded();
-    return entries.filter((e) => e.nextAttemptAt <= now);
+    // Copies, so callers never see later in-place changes (e.g. coalesced payloads).
+    return entries.filter((e) => e.nextAttemptAt <= now).map((e) => ({ ...e }));
   });
 }
 
