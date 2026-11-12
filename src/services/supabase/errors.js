@@ -17,6 +17,8 @@ const MESSAGES = {
   same_password: 'Your new password must be different from your current one.',
   email_address_invalid: 'Enter a valid email address.',
   over_email_send_rate_limit: 'Too many emails sent. Please wait a few minutes and try again.',
+  email_address_not_authorized:
+    "We can't send email to this address yet. Ask the app owner to enable custom email (SMTP) in Supabase.",
   over_request_rate_limit: 'Too many attempts. Please wait a minute and try again.',
   otp_expired: 'This link has expired or was already used. Request a new one.',
   flow_state_expired: 'This sign-in took too long. Please try again.',

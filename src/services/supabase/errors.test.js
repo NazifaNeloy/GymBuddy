@@ -4,6 +4,7 @@ describe('auth error mapping', () => {
   it('maps Supabase error codes', () => {
     expect(getAuthErrorMessage({ code: 'invalid_credentials' })).toBe('Email or password is incorrect.');
     expect(getAuthErrorMessage({ code: 'over_email_send_rate_limit' })).toMatch(/Too many emails/);
+    expect(getAuthErrorMessage({ code: 'email_address_not_authorized' })).toMatch(/custom email \(SMTP\)/);
   });
 
   it('falls back to message patterns', () => {
