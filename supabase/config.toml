@@ -1,0 +1,9 @@
+# Minimal Supabase CLI config so `supabase link` / `supabase db push` work from this folder.
+project_id = "gymbuddy"
+
+[db]
+major_version = 17
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]

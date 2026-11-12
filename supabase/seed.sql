@@ -1,0 +1,3 @@
+-- Local development seed (runs only on `supabase db reset` against a local stack).
+-- Reference data (exercises, starter routines) lives in migrations so production gets it too.
+-- Add throwaway local test data below if needed.
