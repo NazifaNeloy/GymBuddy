@@ -1,19 +1,37 @@
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useAuthDeepLinks } from './navigation/linking';
+import { toNavigationTheme } from './navigation/navigationTheme';
+import { RootNavigator } from './navigation/RootNavigator';
+import { useAuthStore } from './store/authStore';
+import { ThemeProvider, useTheme } from './theme/ThemeProvider';
 
-// Temporary shell. Navigation, theme and the sync engine are added in later steps.
-export default function App() {
+function AppContent() {
+  const theme = useTheme();
+  const init = useAuthStore((s) => s.init);
+
+  useEffect(() => {
+    init();
+  }, [init]);
+  useAuthDeepLinks();
+
   return (
-    <SafeAreaProvider>
-      <View style={styles.container} testID="app-root">
-        <Text accessibilityRole="header">GymBuddy</Text>
-        <StatusBar style="auto" />
-      </View>
-    </SafeAreaProvider>
+    <NavigationContainer theme={toNavigationTheme(theme)}>
+      <RootNavigator />
+      <StatusBar style={theme.isDark ? 'light' : 'dark'} />
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-});
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      {/* Theme preference becomes user-selectable in Settings (later step). */}
+      <ThemeProvider preference="system">
+        <AppContent />
+      </ThemeProvider>
+    </SafeAreaProvider>
+  );
+}
