@@ -6,6 +6,7 @@ module.exports = () => ({
   expo: {
     name: 'GymBuddy',
     slug: 'gymbuddy',
+    owner: 'nazifaneloy', // Expo account that owns the EAS project
     scheme: 'gymbuddy', // deep links: OAuth redirect + password reset
     version: '0.1.0',
     orientation: 'default', // phones and tablets, portrait and landscape
@@ -35,6 +36,10 @@ module.exports = () => ({
       favicon: './assets/favicon.png',
       bundler: 'metro',
       output: 'single',
+    },
+    extra: {
+      // Links this app to the EAS project on expo.dev (builds, GitHub integration). Not a secret.
+      eas: { projectId: '6e94e413-cb33-4299-ba68-694031040e39' },
     },
     plugins: [
       'expo-secure-store',
