@@ -61,8 +61,9 @@ Small helper packages that the stack needs (ask before adding anything else):
   retried with exponential backoff; flushed on app start, on reconnect, and after each local write.
 - RLS policies are scoped to `auth.uid() = user_id`. Storage paths are `progress-photos/{user_id}/{uuid}.jpg`;
   photos are shown through short-lived signed URLs.
-- The Supabase session is larger than SecureStore's ~2 KB value limit, so persist it with the
-  "LargeSecureStore" pattern (AES key in SecureStore, encrypted session in AsyncStorage).
+- The Supabase session is larger than SecureStore's ~2 KB value limit, so it is split into
+  ≤1800-character chunks, all stored in expo-secure-store (`services/supabase/secureStorage.js`).
+  The web demo build falls back to AsyncStorage (localStorage).
 
 ## Domain conventions
 
