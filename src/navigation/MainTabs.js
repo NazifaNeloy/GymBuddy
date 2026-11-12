@@ -21,7 +21,12 @@ export function MainTabs() {
         tabBarPosition: isTablet ? 'left' : 'bottom',
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textMuted,
-        tabBarStyle: { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+        // Soft highlight so the active label stays readable in the tablet side rail.
+        tabBarActiveBackgroundColor: theme.colors.primarySoft,
+        tabBarStyle: [
+          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          isTablet && { width: 200, paddingTop: theme.spacing.lg },
+        ],
         tabBarIcon: () => null,
         tabBarIconStyle: { display: 'none' },
         tabBarLabelStyle: theme.typography.label,

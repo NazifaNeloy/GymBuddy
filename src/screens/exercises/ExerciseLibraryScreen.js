@@ -59,7 +59,7 @@ export function ExerciseLibraryScreen({ navigation }) {
   const cardGap = theme.spacing.md;
 
   const header = (
-    <View>
+    <View style={{ paddingHorizontal: cardGap / 2 }}>
       <OfflineBanner />
       {!isOffline && refreshError ? (
         <Banner tone="warning" message={`Couldn't refresh. Showing saved exercises. ${refreshError}`} />

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { View } from 'react-native';
 import { ErrorState } from '../../components/states/ErrorState';
 import { LoadingState } from '../../components/states/LoadingState';
@@ -38,7 +38,7 @@ function Section({ title, children }) {
   );
 }
 
-export function ExerciseDetailScreen({ route, navigation }) {
+export function ExerciseDetailScreen({ route }) {
   const theme = useTheme();
   const { isTablet } = useResponsive();
   const exerciseId = route.params?.exerciseId;
@@ -50,10 +50,6 @@ export function ExerciseDetailScreen({ route, navigation }) {
   useEffect(() => {
     if (!exercise) load();
   }, [exercise, load]);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({ title: exercise?.name ?? route.params?.title ?? 'Exercise' });
-  }, [navigation, exercise, route.params?.title]);
 
   if (!exercise && (status === 'idle' || status === 'loading')) {
     return <LoadingState message="Loading exercise…" />;
