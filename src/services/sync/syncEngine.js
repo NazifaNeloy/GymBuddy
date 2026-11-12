@@ -39,7 +39,8 @@ export function isNetworkError(error) {
 
 function describe(error) {
   if (isNetworkError(error)) return 'No connection';
-  if (error?.code === '42501') return 'Permission denied by the server';
+  // 42501 also happens when a child row arrives before its parent; it succeeds on retry.
+  if (error?.code === '42501' || error?.code === '23503') return 'Waiting for related changes to sync';
   return error?.message || 'Sync failed';
 }
 
