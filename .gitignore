@@ -68,3 +68,8 @@ Thumbs.db
 
 # TypeScript artifacts (project is JS, but tooling may emit these)
 *.tsbuildinfo
+
+# Extra entries from the Expo SDK 58 template
+.kotlin/
+*.orig.*
+*.pem
