@@ -67,7 +67,7 @@ Small helper packages that the stack needs (ask before adding anything else):
 
 - Weights are **stored in kg**; convert to lb only for display/input (`utils/units.js`).
 - Estimated 1RM uses the Epley formula: `weight × (1 + reps / 30)` (only for reps ≤ 12).
-- PR = best weight, best reps at a weight, or best estimated 1RM per exercise.
+- PRs per exercise (table `personal_records`): `max_weight`, `max_reps` (single set), `max_e1rm`, `max_volume` (weight × reps in one set). Computed on the device, synced.
 - Streak = consecutive days (or user-set weekly target) with at least one completed workout.
 
 ## Git conventions
