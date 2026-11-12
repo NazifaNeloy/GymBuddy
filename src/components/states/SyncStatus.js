@@ -8,6 +8,7 @@ export function SyncStatus({ style }) {
   const pending = useSyncStore((s) => s.pendingCount);
   const failed = useSyncStore((s) => s.failedCount);
   const isSyncing = useSyncStore((s) => s.isSyncing);
+  const lastError = useSyncStore((s) => s.lastError);
   const { isOffline } = useNetworkStatus();
 
   let text = 'All changes synced';
@@ -18,8 +19,13 @@ export function SyncStatus({ style }) {
   } else if (failed > 0) {
     text = `${plural(failed, 'change')} couldn't sync yet. Retrying automatically.`;
     color = 'warning';
-  } else if (pending > 0 || isSyncing) {
+  } else if (pending > 0 && isSyncing) {
     text = 'Syncing…';
+  } else if (pending > 0 && lastError) {
+    text = `${plural(pending, 'change')} waiting to sync. Retrying automatically.`;
+    color = 'warning';
+  } else if (pending > 0) {
+    text = `${plural(pending, 'change')} waiting to sync.`;
   }
   return (
     <AppText variant="caption" color={color} style={style} testID="sync-status" accessibilityLiveRegion="polite">
