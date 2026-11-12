@@ -40,7 +40,8 @@ Small helper packages that the stack needs (ask before adding anything else):
 1. **Every screen has loading, error and empty states.** Use the shared
    `LoadingState`, `ErrorState` (with retry) and `EmptyState` (with a call to action) components.
 2. **Responsive for phone and tablet.** Use `useWindowDimensions` via the `useResponsive` hook;
-   no hard-coded screen widths. Tablet (≥ 768 dp) uses multi-column or master/detail layouts.
+   no hard-coded screen widths. Tablet = shortest side ≥ 600 dp; lists switch to 2 columns at ≥ 768 dp width
+   and 3 at ≥ 1100 dp. Forms are capped at `layout.formMaxWidth` and centered.
 3. **Light and dark mode.** All colors come from the theme. No hex values inside screens/components.
    User can choose System / Light / Dark in Settings.
 4. **Offline-first logging.** Workouts, sets, routines and body-weight entries are written locally
