@@ -3,12 +3,13 @@ import { useResponsive } from '../hooks/useResponsive';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { useTheme } from '../theme/ThemeProvider';
 import { ExercisesStack } from './ExercisesStack';
+import { WorkoutStack } from './WorkoutStack';
 
 const Tab = createBottomTabNavigator();
 
 /**
  * Signed-in app shell. Phones get a bottom tab bar; tablets get a side rail.
- * Workout, Progress and Profile tabs are added in their own steps.
+ * Progress and Profile tabs are added in their own steps.
  */
 export function MainTabs() {
   const theme = useTheme();
@@ -33,6 +34,7 @@ export function MainTabs() {
       }}
     >
       <Tab.Screen name="HomeTab" component={HomeScreen} options={{ title: 'Home' }} />
+      <Tab.Screen name="WorkoutTab" component={WorkoutStack} options={{ title: 'Workout' }} />
       <Tab.Screen name="ExercisesTab" component={ExercisesStack} options={{ title: 'Exercises' }} />
     </Tab.Navigator>
   );
