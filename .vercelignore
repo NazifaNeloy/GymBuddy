@@ -1,5 +1,6 @@
-# Keep tests and local tooling out of the deployment bundle.
-api/_lib/*.test.js
-coverage
-supabase
-docs
+# Paths are anchored with "/" so they only match top-level folders.
+# (An unanchored "supabase" would also drop src/services/supabase and break the build.)
+/api/_lib/*.test.js
+/coverage
+/supabase
+/docs
