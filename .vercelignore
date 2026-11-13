@@ -1,0 +1,5 @@
+# Keep tests and local tooling out of the deployment bundle.
+api/_lib/*.test.js
+coverage
+supabase
+docs
