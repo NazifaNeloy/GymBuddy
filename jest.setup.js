@@ -30,3 +30,6 @@ jest.mock('expo-notifications', () => ({
 jest.mock('react-native-safe-area-context', () =>
   require('react-native-safe-area-context/jest/mock').default
 );
+
+// expo-crypto: use Node's UUID generator in tests.
+jest.mock('expo-crypto', () => ({ randomUUID: () => require('crypto').randomUUID() }));

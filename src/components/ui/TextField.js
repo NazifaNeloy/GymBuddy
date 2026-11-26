@@ -42,7 +42,12 @@ export const TextField = forwardRef(function TextField(
           }}
           testID={testID}
           {...inputProps}
-          style={[styles.input, typography.body, { color: colors.text, paddingHorizontal: spacing.md }]}
+          style={[
+            styles.input,
+            typography.body,
+            { color: colors.text, paddingHorizontal: spacing.md },
+            inputProps.multiline && styles.multiline,
+          ]}
         />
         {secureTextEntry ? (
           <Pressable
@@ -73,5 +78,7 @@ export const TextField = forwardRef(function TextField(
 const styles = StyleSheet.create({
   inputRow: { flexDirection: 'row', alignItems: 'center', borderWidth: 1 },
   input: { flex: 1, paddingVertical: 10 },
+  // Multi-line fields start at ~4 lines and grow; text starts at the top on Android.
+  multiline: { minHeight: 112, textAlignVertical: 'top' },
   toggle: { justifyContent: 'center' },
 });
