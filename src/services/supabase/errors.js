@@ -28,7 +28,8 @@ const MESSAGES = {
   provider_disabled: 'This sign-in method is not enabled yet.',
   validation_failed: 'Please check the details you entered.',
   network: "Can't reach the server. Check your internet connection and try again.",
-  missing_config: 'The app is not configured. Add your Supabase URL and key to .env.',
+  missing_config:
+    'The app is not set up yet: add your real Supabase URL and publishable key to .env, then restart with "npx expo start -c".',
   unknown: 'Something went wrong. Please try again.',
 };
 
