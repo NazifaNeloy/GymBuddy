@@ -12,6 +12,7 @@ import { Screen } from '../../components/ui/Screen';
 import { TextField } from '../../components/ui/TextField';
 import { useExerciseStore } from '../../store/exerciseStore';
 import { useRoutineStore } from '../../store/routineStore';
+import { selectActiveWorkout, useWorkoutStore } from '../../store/workoutStore';
 import { useTheme } from '../../theme/ThemeProvider';
 import { confirmAction } from '../../utils/confirm';
 import {
@@ -45,6 +46,8 @@ export function RoutineBuilderScreen({ navigation, route }) {
   const deleteRoutine = useRoutineStore((s) => s.deleteRoutine);
   const copyTemplate = useRoutineStore((s) => s.copyTemplate);
   const exercises = useExerciseStore((s) => s.items);
+  const workouts = useWorkoutStore((s) => s.workouts);
+  const activeWorkout = useMemo(() => selectActiveWorkout({ workouts }), [workouts]);
   const loadExercises = useExerciseStore((s) => s.load);
   const exerciseById = useMemo(() => Object.fromEntries(exercises.map((e) => [e.id, e])), [exercises]);
 
@@ -160,6 +163,20 @@ export function RoutineBuilderScreen({ navigation, route }) {
     }
   };
 
+  // A day can be started once the routine is saved (starter routines can be started directly).
+  const canStart = !original.isNew && !dirty && dayItems.length > 0;
+  const startDay = async () => {
+    setActionError(null);
+    try {
+      if (!activeWorkout) {
+        await useWorkoutStore.getState().startWorkout({ routineId: draft.id, dayIndex: currentDay });
+      }
+      navigation.navigate('ActiveWorkout');
+    } catch {
+      setActionError("Couldn't start the workout on this phone. Please try again.");
+    }
+  };
+
   const openPicker = () =>
     navigation.navigate('ExercisePicker', {
       dayIndex: currentDay,
@@ -238,6 +255,16 @@ export function RoutineBuilderScreen({ navigation, route }) {
           />
         ) : null}
       </View>
+
+      {canStart ? (
+        <Button
+          title={activeWorkout ? 'Resume workout in progress' : `Start ${draft.days[currentDay] || 'this day'}`}
+          variant={readOnly ? 'secondary' : 'primary'}
+          onPress={startDay}
+          style={{ marginTop: theme.spacing.sm, marginBottom: theme.spacing.md }}
+          testID="start-day"
+        />
+      ) : null}
 
       {!readOnly ? (
         <View style={{ marginTop: theme.spacing.sm }}>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { RoutineCard } from '../../components/routines/RoutineCard';
 import { ErrorState } from '../../components/states/ErrorState';
@@ -6,12 +6,14 @@ import { LoadingState } from '../../components/states/LoadingState';
 import { OfflineBanner } from '../../components/states/OfflineBanner';
 import { SyncStatus } from '../../components/states/SyncStatus';
 import { AppText } from '../../components/ui/AppText';
+import { Banner } from '../../components/ui/Banner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Screen } from '../../components/ui/Screen';
 import { useResponsive } from '../../hooks/useResponsive';
 import { useExerciseStore } from '../../store/exerciseStore';
 import { selectMyRoutines, selectTemplates, useRoutineStore } from '../../store/routineStore';
+import { selectActiveWorkout, useWorkoutStore } from '../../store/workoutStore';
 import { useTheme } from '../../theme/ThemeProvider';
 
 function Grid({ children }) {
@@ -37,6 +39,9 @@ export function RoutineListScreen({ navigation }) {
   const error = useRoutineStore((s) => s.error);
   const load = useRoutineStore((s) => s.load);
   const loadExercises = useExerciseStore((s) => s.load);
+  const workouts = useWorkoutStore((s) => s.workouts);
+  const active = useMemo(() => selectActiveWorkout({ workouts }), [workouts]);
+  const [startError, setStartError] = useState(null);
 
   useEffect(() => {
     load();
@@ -58,15 +63,48 @@ export function RoutineListScreen({ navigation }) {
   if (!hasAny && status === 'error') return <ErrorState title="Couldn't load routines" message={error} onRetry={load} />;
 
   const newRoutine = () => navigation.navigate('RoutineBuilder', {});
+  const startEmpty = async () => {
+    setStartError(null);
+    try {
+      await useWorkoutStore.getState().startWorkout();
+      navigation.navigate('ActiveWorkout');
+    } catch {
+      setStartError("Couldn't start a workout on this phone. Please try again.");
+    }
+  };
 
   return (
     <Screen testID="routine-list-screen">
       <OfflineBanner message="You're offline. Changes are saved on this phone and will sync later." />
+      <Banner tone="error" message={startError} />
+      {active ? (
+        <Card
+          onPress={() => navigation.navigate('ActiveWorkout')}
+          accessibilityLabel={`Workout in progress: ${active.name}. Resume`}
+          testID="resume-workout"
+          style={{ marginBottom: theme.spacing.xl, borderColor: theme.colors.primary, borderWidth: 2 }}
+        >
+          <AppText variant="caption" color="primary">
+            Workout in progress
+          </AppText>
+          <AppText variant="heading">{active.name}</AppText>
+          <AppText variant="label" color="primary" style={{ marginTop: theme.spacing.xs }}>
+            Resume →
+          </AppText>
+        </Card>
+      ) : (
+        <Button
+          title="Start empty workout"
+          onPress={startEmpty}
+          testID="start-empty-workout"
+          style={{ marginBottom: theme.spacing.xl }}
+        />
+      )}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
         <AppText variant="title" accessibilityRole="header">
           My routines
         </AppText>
-        <Button title="New routine" onPress={newRoutine} testID="new-routine" />
+        <Button title="New routine" variant="secondary" onPress={newRoutine} testID="new-routine" />
       </View>
       <SyncStatus style={{ marginTop: theme.spacing.xs, marginBottom: theme.spacing.md }} />
 

@@ -14,11 +14,12 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { filterExercises } from '../../utils/exerciseFilters';
 import { plural } from '../../utils/format';
 
-/** Multi-select exercises for one routine day; returns them to the builder via route params. */
+/** Multi-select exercises; returns them to the calling screen (`returnTo`) via route params. */
 export function ExercisePickerScreen({ navigation, route }) {
   const theme = useTheme();
   const { gutter } = useResponsive();
-  const { dayIndex = 0, dayName, alreadyAdded = [] } = route.params ?? {};
+  // returnTo: the screen that receives { pickedExerciseIds, pickedDayIndex } (routine builder or active workout).
+  const { dayIndex = 0, dayName, alreadyAdded = [], returnTo = 'RoutineBuilder' } = route.params ?? {};
   const items = useExerciseStore((s) => s.items);
   const status = useExerciseStore((s) => s.status);
   const error = useExerciseStore((s) => s.error);
@@ -45,7 +46,7 @@ export function ExercisePickerScreen({ navigation, route }) {
 
   const toggle = (id) => setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
   const done = () =>
-    navigation.popTo('RoutineBuilder', { pickedExerciseIds: selected, pickedDayIndex: dayIndex }, { merge: true });
+    navigation.popTo(returnTo, { pickedExerciseIds: selected, pickedDayIndex: dayIndex }, { merge: true });
 
   return (
     <View style={[styles.flex, { backgroundColor: theme.colors.background }]} testID="exercise-picker-screen">
