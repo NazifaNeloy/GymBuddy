@@ -10,6 +10,7 @@ import { useAuthStore } from './store/authStore';
 import { useExerciseStore } from './store/exerciseStore';
 import { useRoutineStore } from './store/routineStore';
 import { useSyncStore } from './store/syncStore';
+import { useWorkoutStore } from './store/workoutStore';
 import * as syncQueue from './services/sync/queue';
 import { ThemeProvider, useTheme } from './theme/ThemeProvider';
 
@@ -27,6 +28,7 @@ function AppContent() {
     if (authStatus !== 'signedOut') return;
     useExerciseStore.getState().reset();
     useRoutineStore.getState().reset();
+    useWorkoutStore.getState().reset();
     useSyncStore.getState().reset();
     syncQueue.clear();
   }, [authStatus]);
